@@ -1,7 +1,7 @@
 import pandas as pd 
 
 
-data = pd.read_csv("data/CustomerChurnData.csv")
+
 
 
 def preprocessing(data):
@@ -54,4 +54,11 @@ def preprocessing(data):
     #For each categorical column print the values with numerical count 
     for column in categorical_columns: 
         print(data[column].value_counts())
-data = preprocessing(data)
+
+    #dropping customerID because it is not a feature 
+    data = data.drop(columns=["customerID"])
+
+    #One-hot encoding the catagorical columns so sklearn can utilize them
+    data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
+
+    return data 
