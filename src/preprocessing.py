@@ -58,6 +58,8 @@ def preprocessing(data):
     #dropping customerID because it is not a feature 
     data = data.drop(columns=["customerID"])
 
+   
+
     #One-hot encoding the catagorical columns so sklearn can utilize them
     data = pd.get_dummies(data, columns=categorical_columns, drop_first=True)
 

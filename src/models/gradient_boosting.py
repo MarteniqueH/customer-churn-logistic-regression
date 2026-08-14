@@ -27,7 +27,7 @@ train_X,test_X, train_y ,test_y = train_test_split (
 
 
 def gradient_boosting_classifier():
-    model = GradientBoostingClassifier (
+    gbc_model = GradientBoostingClassifier (
         #reduces the contribution of each tree
                 learning_rate = 0.2, 
                 #number of trees to be built 
@@ -41,16 +41,16 @@ def gradient_boosting_classifier():
                 #maximum depth of each tree
                 max_depth = 3)
 
-    model.fit(train_X, train_y)
+    gbc_model.fit(train_X, train_y)
 
-    y_perdictions = model.predict(test_X)
+    y_perdictions = gbc_model.predict(test_X)
 
     #Evaluation Metrics 
 
     accuracy = accuracy_score(test_y, y_perdictions)
     recall = recall_score(test_y, y_perdictions)
     f1Score = f1_score(test_y, y_perdictions)
-    y_probabilities = model.predict_proba(test_X)[:,1]
+    y_probabilities = gbc_model.predict_proba(test_X)[:,1]
     rocAuc = roc_auc_score(test_y, y_probabilities)
 
     print("MODEL PERFORMANCE REPORT: ")
