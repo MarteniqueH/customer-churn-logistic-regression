@@ -3,7 +3,7 @@ import pandas as pd
 from src.preprocessing import preprocessing
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_score, recall_score
  
 data = pd.read_csv("data/CustomerChurnData.csv")
 data = preprocessing(data)
@@ -45,9 +45,30 @@ def gradient_boosting_classifier():
 
     y_perdictions = model.predict(test_X)
 
+    #Evaluation Metrics 
+
     accuracy = accuracy_score(test_y, y_perdictions)
-    print(f"Accuracy Score: {accuracy:.4f}")
-    print(classification_report(test_y, y_perdictions))
+    recall = recall_score(test_y, y_perdictions)
+    f1Score = f1_score(test_y, y_perdictions)
+    y_probabilities = model.predict_proba(test_X)[:,1]
+    rocAuc = roc_auc_score(test_y, y_probabilities)
+
+    print("MODEL PERFORMANCE REPORT: ")
+    print("____________________________")
+    #Measures overall performance of model
+    print(f"Accuracy Score: {accuracy: .2%}")
+    #Measures how many positive cases correctly identified 
+    print(f"Recall Score: {recall:.2%}")
+    #Balances the percision and recall for imbalanced classes 
+    print(f"F1 Score: {f1Score: .2%}")
+    #Measures the model's ability to distinguish between classes 
+    print(f"ROC-AUC: {rocAuc : .2%}" )
+
+
+
+
+
+    
    
 gradient_boosting_classifier()
 
