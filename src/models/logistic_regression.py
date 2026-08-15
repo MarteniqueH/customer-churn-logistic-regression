@@ -23,10 +23,17 @@ train_X,test_X,train_y,test_y = train_test_split(
 
 def logistic_regression():
     lr_model = LogisticRegression(
-       
+        #Controls regularization
+        C=1.0,
+        #L2 regularization
+        l1_ratio = 0 ,
+        #algorithm used to train model
+        solver ="lbfgs",
+        #gives the model many interations to converge
+        max_iter= 1000,
+        #all classes treated equally 
+        class_weight = None
         
-
-
 
     )
 
