@@ -28,8 +28,19 @@ train_X,test_X, train_y ,test_y = train_test_split (
 
 def gradient_boosting_classifier():
     gbc_model = GradientBoostingClassifier (
-
-       
+                #reduces the contribution of each tree
+                    #reduces the contribution of each tree
+                    learning_rate = 0.2, 
+                    #number of trees to be built 
+                    n_estimators = 100, 
+                    #minimum number of samples required to split 
+                    min_samples_split = 2,
+        
+                    #minimum number of samples required in a leaf 
+                    min_samples_leaf = 3,
+        
+                    #maximum depth of each tree
+                    max_depth = 3
         
 
                

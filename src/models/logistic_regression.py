@@ -1,7 +1,7 @@
 import pandas as pd
 from src.preprocessing import preprocessing
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,GridSearchCV, cross_val_score
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, precision_score, recall_score
 
 data = pd.read_csv("data/CustomerChurnData.csv")
@@ -22,41 +22,70 @@ train_X,test_X,train_y,test_y = train_test_split(
 )
 
 def logistic_regression():
-    lr_model = LogisticRegression(
-        #Controls regularization
-        C=1.0,
-        #L2 regularization
-        l1_ratio = 0 ,
-        #algorithm used to train model
-        solver ="lbfgs",
-        #gives the model many interations to converge
-        max_iter= 1000,
-        #all classes treated equally 
-        class_weight = None
+    
+        #Hyperparameter Grid for search over
+
+        hyperparameter_grid = {
+
+            "C" : [0.01,0.1,1.0,10,100],
+            "solver" : ["lbfgs"],
+            "max_iter" : [5000],
+            "class_weight" : [None,"balanced"]
+            }
+
         
+       
+        grid_search = GridSearchCV(
+              estimator = LogisticRegression(),
+              param_grid=  hyperparameter_grid,
+              cv = 5,
+              scoring = "f1", 
+              n_jobs = -1,
+              verbose = 1
+        )
 
-    )
+            
 
-    lr_model.fit(train_X,train_y)
+        grid_search.fit(train_X,train_y)
 
-    y_perdictions = lr_model.predict(test_X)
+        print("BEST HYPERPARAMETERS FOUND FROM GRID SEARCH: ")
+        print("____________________________")
+        print(grid_search.best_params_)
+        print(f"The best Cross Validation F1 score: {grid_search.best_score_: .2%}")
 
-    accuracy = accuracy_score(test_y, y_perdictions)
-    recall = recall_score(test_y, y_perdictions)
-    f1Score = f1_score(test_y, y_perdictions)
-    y_probabilities = lr_model.predict_proba(test_X)[:,1]
-    rocAuc = roc_auc_score(test_y, y_probabilities)
+        #The best model should be found with the grid search of the best hyperparamters 
+        lr_model = grid_search.best_estimator_
 
-    print("MODEL PERFORMANCE REPORT: ")
-    print("____________________________")
-    #Measures overall performance of model
-    print(f"Accuracy Score: {accuracy: .2%}")
-    #Measures how many positive cases correctly identified 
-    print(f"Recall Score: {recall:.2%}")
-    #Balances the percision and recall for imbalanced classes 
-    print(f"F1 Score: {f1Score: .2%}")
-    #Measures the model's ability to distinguish between classes 
-    print(f"ROC-AUC: {rocAuc : .2%}" )
+        print("The cross validation scores: ")
+        print("____________________________")
+
+        #list of metrics that will be calculated 
+        metrics = ["accuracy", "recall", "f1", "roc_auc"]
+        #loop through metrcis 
+        for metric in metrics:
+                #complete a  5-fold cross validation 
+                scores = cross_val_score(lr_model,train_X,train_y, cv = 5, scoring= metric)
+                #Display the average score and standard deviation of the metric 
+                print(f"{metric} : mean value = {scores.mean() :.2%} Standard Deviation: {scores.std() : .2%}")
+
+        y_perdictions = lr_model.predict(test_X)
+
+        accuracy = accuracy_score(test_y, y_perdictions)
+        recall = recall_score(test_y, y_perdictions)
+        f1Score = f1_score(test_y, y_perdictions)
+        y_probabilities = lr_model.predict_proba(test_X)[:,1]
+        rocAuc = roc_auc_score(test_y, y_probabilities)
+
+        print("MODEL PERFORMANCE REPORT: ")
+        print("____________________________")
+        #Measures overall performance of model
+        print(f"Accuracy Score: {accuracy: .2%}")
+        #Measures how many positive cases correctly identified 
+        print(f"Recall Score: {recall:.2%}")
+        #Balances the percision and recall for imbalanced classes 
+        print(f"F1 Score: {f1Score: .2%}")
+        #Measures the model's ability to distinguish between classes 
+        print(f"ROC-AUC: {rocAuc : .2%}" )
 
 
 logistic_regression()

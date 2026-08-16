@@ -22,7 +22,7 @@ train_X,test_X, train_y ,test_y = train_test_split (
     random_state = 42
 )
 
-print("test")
+
 
 def random_forest_classifier():
     rf_model = RandomForestClassifier(
