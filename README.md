@@ -44,9 +44,9 @@ d683-advanced-ai-and-ml/
 1. Start by cloning the repository and navigage to the project root:
 
 ```bash 
-git clone <https://gitlab.com/wgu-gitlab-environment/student-repos/mha2360/d683-advanced-ai-and-ml.git> 
+git clone 
 
-cd d683-advanced-ai-and-ml
+
 ```
 
 2. Create and activate a virtual environment 
