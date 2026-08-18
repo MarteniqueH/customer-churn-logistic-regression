@@ -19,7 +19,7 @@ The model is optimized using 5-fold cross-validation and hyperparamter tuning us
 - skikit-learn
 
 
-## Hardward 
+## Hardware 
 
 No GPU is required to run the program. The program uses standard CPU with atleast 4 GB RAM
 
